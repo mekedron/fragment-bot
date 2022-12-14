@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import * as cheerio from "cheerio";
 
 export const fetchListingHtml = async () => {
   const response = await fetch(

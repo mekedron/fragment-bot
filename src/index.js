@@ -46,7 +46,9 @@ const parse = async () => {
 
     if (priceDifference === 0 && !loggedNormalOffers[record.number]) {
       loggedNormalOffers[record.number] = record;
+
       normalOffersCount++;
+
       console.log(
         `[%s] Found a number for the current random number price. Number: ${record.number}. Price: ${record.price} TON. Link: ${record.link}`,
         new Date().toUTCString()
@@ -57,9 +59,9 @@ const parse = async () => {
       continue;
     }
 
-    sentNumbers[record.number] = record;
-
     if (priceDifference > 1) {
+      sentNumbers[record.number] = record;
+
       veryGoodOffersCount++;
 
       await bot.telegram.sendMessage(
@@ -74,7 +76,10 @@ const parse = async () => {
 
       return;
     } else if (priceDifference > 0) {
+      sentNumbers[record.number] = record;
+
       goodOffersCount++;
+
       await bot.telegram.sendMessage(
         process.env.CHAT_ID,
         `Found a good offer (+${priceDifference}).\nNumber: ${record.number}\nPrice: ${record.price} TON\nLink: ${record.link}`
@@ -89,6 +94,10 @@ const parse = async () => {
 };
 
 const boot = async () => {
+  console.log(
+    `[%s] Bot is running! Current random number price: ${getRandomNumberPrice()} TON`,
+    new Date().toUTCString()
+  );
   await bot.telegram.sendMessage(
     process.env.CHAT_ID,
     `⚠️ Bot is running! Current random number price: ${getRandomNumberPrice()} TON`
