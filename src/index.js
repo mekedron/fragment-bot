@@ -5,12 +5,10 @@ import { Telegraf } from "telegraf";
 import { getRandomInt } from "./getRandomInt.js";
 import { getRandomNumberPrice } from "./getRandomNumberPrice.js";
 import { getBidLink } from "./getBidLink.js";
-import QRCode from "qrcode";
 
 dotenv.config();
 
 const sentNumbers = {};
-const loggedNormalOffers = {};
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -20,7 +18,7 @@ let normalOffersCount = 0;
 
 let lastParsedListing;
 
-let desiredProfit = 6;
+let desiredProfit = 7;
 
 const parse = async () => {
   let response;
@@ -48,22 +46,11 @@ const parse = async () => {
 
     const priceDifference = getRandomNumberPrice() - record.price;
 
-    if (priceDifference === 0 && !loggedNormalOffers[record.number]) {
-      loggedNormalOffers[record.number] = record;
-
-      normalOffersCount++;
-
-      console.log(
-        `[%s] Found a number for the current random number price. Number: ${record.number}. Price: ${record.price} TON. Link: ${record.link}`,
-        new Date().toUTCString()
-      );
-    }
-
     if (sentNumbers[record.number]) {
       continue;
     }
 
-    if (priceDifference > desiredProfit) {
+    if (priceDifference >= desiredProfit + 1) {
       sentNumbers[record.number] = record;
 
       profitableOfferCount++;
@@ -91,7 +78,7 @@ const parse = async () => {
       );
 
       return;
-    } else if (priceDifference > desiredProfit - 1) {
+    } else if (priceDifference >= desiredProfit) {
       sentNumbers[record.number] = record;
 
       goodOffersCount++;
