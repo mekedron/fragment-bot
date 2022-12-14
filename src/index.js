@@ -18,6 +18,8 @@ let normalOffersCount = 0;
 
 let lastParsedListing;
 
+let veryGoodDiff = 1;
+
 const parse = async () => {
   let response;
 
@@ -59,7 +61,7 @@ const parse = async () => {
       continue;
     }
 
-    if (priceDifference > 1) {
+    if (priceDifference > veryGoodDiff) {
       sentNumbers[record.number] = record;
 
       veryGoodOffersCount++;
@@ -75,7 +77,7 @@ const parse = async () => {
       );
 
       return;
-    } else if (priceDifference > 0) {
+    } else if (priceDifference > veryGoodDiff - 1) {
       sentNumbers[record.number] = record;
 
       goodOffersCount++;
@@ -132,6 +134,8 @@ bot.command("stats", async (ctx) => {
   const messageLines = [
     `Current random number price: ${getRandomNumberPrice()} TON`,
     "",
+    `Current good difference value: ${veryGoodDiff} TON`,
+    "",
     `Very good offers found: ${veryGoodOffersCount}`,
     `Good offers found: ${goodOffersCount}`,
     `Normal offers found: ${normalOffersCount}`,
@@ -162,6 +166,17 @@ bot.command("stats", async (ctx) => {
   });
 
   await ctx.reply(messageLines.join("\n"));
+});
+
+bot.command("diff", async (ctx) => {
+  const newDiff = ctx.message.text.split(" ")?.[1] || false;
+
+  if (newDiff) {
+    veryGoodDiff = parseInt(newDiff);
+    ctx.reply("Difference has been updated!");
+  } else {
+    ctx.reply(`Current good difference value: ${veryGoodDiff}`);
+  }
 });
 
 bot.launch();
