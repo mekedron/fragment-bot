@@ -66,7 +66,7 @@ const parse = async () => {
 
       await bot.telegram.sendMessage(
         process.env.CHAT_ID,
-        `⚠️ Found a VERY good offer.\nNumber: ${record.number}\nPrice: ${record.price} TON\nLink: ${record.link}`
+        `⚠️ Found a VERY good offer (+${priceDifference}).\nNumber: ${record.number}\nPrice: ${record.price} TON\nLink: ${record.link}`
       );
 
       console.log(
@@ -115,7 +115,7 @@ const boot = async () => {
     }
     setTimeout(async () => {
       await startParsing();
-    }, 1000 + getRandomInt(500));
+    }, 700 + getRandomInt(500));
   };
 
   await startParsing();
